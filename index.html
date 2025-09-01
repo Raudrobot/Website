@@ -6,13 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Epic Hello</title>
   <style>
-    :root { --bg: #0f172a; --fg1: #06b6d4; --fg2: #8b5cf6; }
-    html, body { height: 100%; margin: 0; }
+    :root { --bg1: #0f172a; --bg2: #1e293b; --fg1: #06b6d4; --fg2: #8b5cf6; }
+    html, body { height: 100%; margin: 0; overflow: hidden; }
     body {
       display: grid;
       place-items: center;
-      background: radial-gradient(1200px 800px at 50% 40%, #1e293b, var(--bg));
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial;
+      background: linear-gradient(270deg, var(--bg1), var(--bg2));
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
     }
     h1 {
       font-size: clamp(48px, 16vw, 220px);
@@ -23,15 +25,32 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 0 0 20px rgba(139, 92, 246, 0.6), 0 0 40px rgba(6, 182, 212, 0.6);
-      animation: glowPulse 3s ease-in-out infinite;
+      animation: glowPulse 3s ease-in-out infinite, waveText 2s ease-in-out infinite;
     }
     @keyframes glowPulse {
       0%, 100% { text-shadow: 0 0 20px rgba(139, 92, 246, 0.6), 0 0 40px rgba(6, 182, 212, 0.6); transform: scale(1); }
       50% { text-shadow: 0 0 40px rgba(139, 92, 246, 0.9), 0 0 80px rgba(6, 182, 212, 0.9); transform: scale(1.05); }
     }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes waveText {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(1deg); }
+    }
+    footer {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      font-size: 14px;
+      color: rgba(226, 232, 240, 0.7);
+    }
   </style>
 </head>
 <body>
   <h1>Hello</h1>
+  <footer>Made with ChatGPT 🤖</footer>
 </body>
 </html>
