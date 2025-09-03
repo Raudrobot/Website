@@ -3,192 +3,60 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Epic Hello</title>
-  <style>
-    :root {
-      --bg1: #0f172a;
-      --bg2: #1e293b;
-      --fg1: #06b6d4;
-      --fg2: #8b5cf6;
-      --accent: #facc15;
-    }
-
-    html, body {
-      margin: 0;
-      height: 100%;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial;
-      overflow-x: hidden;
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(270deg, var(--bg1), var(--bg2));
-      background-size: 400% 400%;
-      animation: gradientBG 20s ease infinite;
-      color: #fff;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: clamp(64px, 16vw, 220px);
-      margin: 0;
-      background: linear-gradient(90deg, var(--fg1), var(--fg2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(139, 92, 246, 0.6), 0 0 40px rgba(6, 182, 212, 0.6);
-      animation: glowPulse 3s ease-in-out infinite, waveText 2s ease-in-out infinite;
-    }
-
-    p {
-      font-size: 1.2rem;
-      margin: 15px 0;
-      color: rgba(226, 232, 240, 0.8);
-      animation: fadeIn 3s ease forwards;
-      opacity: 0;
-    }
-
-    button {
-      background: linear-gradient(90deg, var(--fg1), var(--fg2));
-      border: none;
-      padding: 12px 28px;
-      margin: 10px;
-      font-size: 1rem;
-      border-radius: 12px;
-      cursor: pointer;
-      color: #fff;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 20px rgba(6,182,212,0.6), 0 0 40px rgba(139,92,246,0.6);
-    }
-
-    footer {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      font-size: 14px;
-      color: rgba(226, 232, 240, 0.7);
-    }
-
-    .section {
-      padding: 50px 20px;
-      max-width: 900px;
-      animation: fadeUp 2s ease forwards;
-      opacity: 0;
-    }
-
-    /* Animations */
-    @keyframes glowPulse {
-      0%, 100% { text-shadow: 0 0 20px rgba(139, 92, 246, 0.6), 0 0 40px rgba(6, 182, 212, 0.6); transform: scale(1); }
-      50% { text-shadow: 0 0 40px rgba(139, 92, 246, 0.9), 0 0 80px rgba(6, 182, 212, 0.9); transform: scale(1.05); }
-    }
-
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    @keyframes waveText {
-      0%, 100% { transform: rotate(0deg); }
-      50% { transform: rotate(1deg); }
-    }
-
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-      from { opacity: 0; transform: translateY(30px); }
-    }
-
-    /* Floating particles */
-    .particle {
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-      mix-blend-mode: screen;
-      opacity: 0.7;
-    }
-  </style>
+  <title>Epic Hello — Raudrobot</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Hello</h1>
-  <p>Welcome to my epic, upgraded interactive website!</p>
-  <div class="section">
-    <button onclick="alert('You clicked me!')">Click Me</button>
-    <button onclick="document.body.classList.toggle('dark')">Toggle Dark Mode</button>
-  </div>
+  <header class="site-header">
+    <nav class="nav">
+      <div class="brand">Raudrobot</div>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button id="theme-toggle" class="btn small">Toggle</button>
+    </nav>
+  </header>
 
-  <div class="section">
-    <h2 style="background: linear-gradient(90deg, var(--fg1), var(--fg2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">About This Page</h2>
-    <p>This page is built with HTML, CSS, and a touch of JavaScript. It now features mouse-reactive particles, glowing text, animations, and responsive design.</p>
-  </div>
+  <main class="hero">
+    <h1 class="glow">Hello</h1>
+    <p class="subtitle">A tiny experimental landing page — interactive, responsive, and shiny.</p>
+    <div class="hero-cta">
+      <a class="btn" href="#projects">See Projects</a>
+      <button class="btn outline" id="play-btn">Play</button>
+    </div>
+  </main>
 
-  <footer>Made with ChatGPT 🤖</footer>
+  <section id="about" class="section">
+    <h2>About This Page</h2>
+    <p>This page is built with semantic HTML, external CSS, and JavaScript. It features animated glowing text, mouse & touch reactive particles, smooth gradient background, and scroll-triggered animations.</p>
+  </section>
 
-  <script>
-    // Create floating particles
-    const colors = ['#06b6d4','#8b5cf6','#facc15'];
-    const particles = [];
-    const numParticles = 40;
-    const body = document.body;
+  <section id="projects" class="section projects">
+    <h2>Projects</h2>
+    <div id="project-list" class="cards">
+      <!-- Example cards. Replace or populate dynamically if you want. -->
+      <article class="card">
+        <h3><a href="https://github.com/Raudrobot/Website" target="_blank">Website (this repo)</a></h3>
+        <p>Repo and live demo for the personal site.</p>
+      </article>
+      <article class="card">
+        <h3>Placeholder Project</h3>
+        <p>Add your project links here.</p>
+      </article>
+    </div>
+  </section>
 
-    for (let i = 0; i < numParticles; i++) {
-      let p = document.createElement('div');
-      p.className = 'particle';
-      let size = Math.random() * 8 + 4;
-      p.style.width = size + 'px';
-      p.style.height = size + 'px';
-      p.style.left = Math.random() * 100 + 'vw';
-      p.style.top = Math.random() * 100 + 'vh';
-      p.style.background = colors[Math.floor(Math.random()*colors.length)];
-      body.appendChild(p);
-      particles.push({el: p, x: Math.random()*window.innerWidth, y: Math.random()*window.innerHeight});
-    }
+  <section id="contact" class="section">
+    <h2>Contact</h2>
+    <p>Find me on GitHub: <a href="https://github.com/Raudrobot" target="_blank">Raudrobot</a></p>
+  </section>
 
-    // Track mouse or touch
-    let mouseX = window.innerWidth/2;
-    let mouseY = window.innerHeight/2;
+  <footer class="site-footer">Made with ChatGPT 🤖 • © <span id="year">2025</span></footer>
 
-    window.addEventListener('mousemove', e => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
 
-    window.addEventListener('touchmove', e => {
-      if (e.touches.length > 0) {
-        mouseX = e.touches[0].clientX;
-        mouseY = e.touches[0].clientY;
-      }
-    });
-
-    // Animate particles
-    function animate() {
-      particles.forEach(p => {
-        // move slightly towards mouse
-        let dx = (mouseX - p.x) * 0.002;
-        let dy = (mouseY - p.y) * 0.002;
-        p.x += dx + (Math.random() - 0.5) * 1.5;
-        p.y += dy + (Math.random() - 0.5) * 1.5;
-
-        // wrap around screen
-        if (p.x < 0) p.x = window.innerWidth;
-        if (p.x > window.innerWidth) p.x = 0;
-        if (p.y < 0) p.y = window.innerHeight;
-        if (p.y > window.innerHeight) p.y = 0;
-
-        p.el.style.transform = `translate(${p.x}px, ${p.y}px)`;
-      });
-      requestAnimationFrame(animate);
-    }
-    animate();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
