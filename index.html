@@ -1,102 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Raudrobot – New Site</title>
-  <style>
-    :root{
-      --bg: #0f172a;
-      --fg: #06b6d4;
-      --accent: #facc15;
-      --text: #e6e8f0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raudrobot – Interactive Site</title>
+<style>
+:root{
+  --bg1:#0f172a; --bg2:#1e293b;
+  --fg1:#06b6d4; --fg2:#8b5cf6;
+  --text:#e6e8f0;
+  --accent:#facc15;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:system-ui, sans-serif; color:var(--text); scroll-behavior:smooth;}
+a{color:var(--fg1); text-decoration:none;}
+a:hover{color:var(--accent);}
+body{background:linear-gradient(270deg,var(--bg1),var(--bg2)); background-size:400% 400%; animation:bgShift 20s ease infinite;}
+header{position:fixed;top:0;left:0;right:0; background:rgba(15,23,42,0.85); padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; z-index:10;}
+.nav-links{display:flex; gap:1rem; list-style:none;}
+.hero{min-height:80vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6rem 1rem 2rem; position:relative; z-index:2;}
+.hero h1{font-size:clamp(2rem,8vw,5rem); background:linear-gradient(90deg,var(--fg1),var(--fg2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:glow 3s ease-in-out infinite;}
+.hero p{margin:1rem 0 2rem;}
+.btn{display:inline-block; padding:0.7rem 1.5rem; background: var(--fg1); color:white; border-radius:12px; margin:0.3rem;}
+.btn.outline{background:transparent; border:1px solid var(--fg1); color:var(--fg1);}
+section{padding:4rem 1rem; max-width:900px; margin:0 auto;}
+.projects-list{list-style:none; display:flex; flex-direction:column; gap:0.8rem;}
+footer{text-align:center; padding:2rem 1rem; background:rgba(15,23,42,0.85); font-size:0.9rem;}
 
-    *{box-sizing:border-box;margin:0;padding:0;}
-    html, body{height:100%;font-family:system-ui, sans-serif; background: var(--bg); color: var(--text);}
-    a{color: var(--fg); text-decoration: none;}
-    a:hover{color: var(--accent);}
+/* Theme toggle */
+body.dark{--bg1:#1a1a2e; --bg2:#162447; --fg1:#e94560; --fg2:#0f3460; background:linear-gradient(270deg,var(--bg1),var(--bg2)); color:#f0f0f0;}
+body.dark .hero h1{background:linear-gradient(90deg,var(--fg1),var(--fg2));}
 
-    body{scroll-behavior: smooth;}
+/* Particles canvas */
+#particle-canvas{position:fixed; inset:0; z-index:0; display:block; pointer-events:none;}
 
-    header{
-      position: fixed; top:0; left:0; right:0;
-      background: rgba(15,23,42,0.85);
-      padding: 1rem 2rem;
-      display:flex; justify-content: space-between; align-items:center;
-      z-index:10;
-    }
-    .nav-links{display:flex; gap:1rem; list-style:none;}
-
-    main.hero{
-      min-height: 80vh;
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      text-align:center;
-      padding:6rem 1rem 2rem;
-    }
-    main.hero h1{font-size:clamp(2rem,8vw,5rem);}
-    main.hero p{margin:1rem 0 2rem;}
-    .btn{
-      display:inline-block; padding:0.7rem 1.5rem; background: var(--fg); color:white;
-      border-radius:12px; margin:0.3rem; text-decoration:none;
-    }
-    .btn.outline{
-      background:transparent; border:1px solid var(--fg); color:var(--fg);
-    }
-
-    section{
-      padding:4rem 1rem;
-      max-width:900px;
-      margin:0 auto;
-    }
-
-    .projects-list{list-style:none; display:flex; flex-direction:column; gap:0.8rem;}
-
-    footer{
-      text-align:center; padding:2rem 1rem; background: rgba(15,23,42,0.85);
-      font-size:0.9rem;
-    }
-  </style>
+/* Animations */
+@keyframes bgShift{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+@keyframes glow{0%,100%{text-shadow:0 0 18px rgba(139,92,246,0.6),0 0 36px rgba(6,182,212,0.5);}50%{text-shadow:0 0 36px rgba(139,92,246,0.9),0 0 72px rgba(6,182,212,0.9);}}
+</style>
 </head>
 <body>
-  <header>
-    <div class="brand">Raudrobot</div>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </header>
+<header>
+  <div class="brand">Raudrobot</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><button id="theme-toggle" class="btn small">Toggle Theme</button></li>
+  </ul>
+</header>
 
-  <main class="hero">
-    <h1>Welcome!</h1>
-    <p>Fresh start. Minimal, clean, mobile-ready.</p>
-    <div>
-      <a class="btn" href="#projects">See Projects</a>
-      <a class="btn outline" href="#contact">Contact Me</a>
-    </div>
-  </main>
+<main class="hero">
+  <h1>Welcome!</h1>
+  <p>Fresh start. Minimal, interactive, mobile-ready.</p>
+  <div>
+    <a class="btn" href="#projects">See Projects</a>
+    <a class="btn outline" href="#contact">Contact Me</a>
+  </div>
+</main>
 
-  <section id="about">
-    <h2>About Me</h2>
-    <p>This is a new single-file site, minimal design, fully responsive, ready for your content.</p>
-  </section>
+<section id="about">
+  <h2>About Me</h2>
+  <p>This is a single-file interactive site. Minimal, responsive, with glowing text, gradient background, and theme toggle.</p>
+</section>
 
-  <section id="projects">
-    <h2>Projects</h2>
-    <ul class="projects-list">
-      <li><a href="https://github.com/Raudrobot/Website" target="_blank">Website Repository</a></li>
-      <li><a href="#">Placeholder Project</a></li>
-    </ul>
-  </section>
+<section id="projects">
+  <h2>Projects</h2>
+  <ul class="projects-list">
+    <li><a href="https://github.com/Raudrobot/Website" target="_blank">Website Repository</a></li>
+    <li><a href="#">Placeholder Project</a></li>
+  </ul>
+</section>
 
-  <section id="contact">
-    <h2>Contact</h2>
-    <p>Find me on <a href="https://github.com/Raudrobot" target="_blank">GitHub</a></p>
-  </section>
+<section id="contact">
+  <h2>Contact</h2>
+  <p>Find me on <a href="https://github.com/Raudrobot" target="_blank">GitHub</a></p>
+</section>
 
-  <footer>
-    Created by ChatGPT 🤖 • 2025
-  </footer>
+<canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+<footer>Created by ChatGPT 🤖 • 2025</footer>
+
+<script>
+// Theme toggle
+const themeBtn = document.getElementById('theme-toggle');
+themeBtn.addEventListener('click', () => document.body.classList.toggle('dark'));
+
+// Simple particle background
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let W = window.innerWidth, H = window.innerHeight;
+canvas.width = W; canvas.height = H;
+window.addEventListener('resize',()=>{W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight;});
+
+const particles = [];
+for(let i=0;i<60;i++){
+  particles.push({x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-0.5)*0.5, vy:(Math.random()-0.5)*0.5, r:Math.random()*3+1});
+}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='rgba(255,255,255,0.05)';
+  ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='rgba(6,182,212,0.8)';
+  particles.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0)p.x=W; if(p.x>W)p.x=0;
+    if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
 </body>
 </html>
