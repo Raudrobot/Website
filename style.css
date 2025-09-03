@@ -8,7 +8,7 @@ body{min-height:100%;background:linear-gradient(270deg,var(--bg1),var(--bg2));ba
 
 /* header */
 .site-header{position:fixed;top:12px;left:0;right:0;display:flex;justify-content:center;pointer-events:none}
-.nav{width:95%;max-width:1100px;display:flex;align-items:center;justify-content:space-between;gap:12px;pointer-events:auto}
+.nav{width:95%;max-width:1100px;display:flex;align-items:center;justify-content:space-between;gap:12px;pointer-events:auto;position:relative;z-index:2}
 .brand{font-weight:700;color:transparent;background:linear-gradient(90deg,var(--fg1),var(--fg2));-webkit-background-clip:text}
 .nav-links{display:flex;gap:12px;list-style:none;padding:0;margin:0}
 .nav-links a{color:rgba(230,232,240,0.8);text-decoration:none}
@@ -22,7 +22,7 @@ body{min-height:100%;background:linear-gradient(270deg,var(--bg1),var(--bg2));ba
 .subtitle{max-width:800px;margin:12px 0 20px;color:rgba(230,232,240,0.85)}
 .hero-cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
 
-.section{padding:4rem 1rem;max-width:1100px;margin:0 auto;opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease;z-index:2}
+.section{padding:4rem 1rem;max-width:1100px;margin:0 auto;opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease;position:relative;z-index:2}
 .section.visible{opacity:1;transform:none}
 
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:20px}
@@ -37,6 +37,21 @@ body{min-height:100%;background:linear-gradient(270deg,var(--bg1),var(--bg2));ba
 
 @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @keyframes glow{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+
+/* Dark theme */
+body.dark{
+  --bg1:#1a1a2e;
+  --bg2:#162447;
+  --fg1:#e94560;
+  --fg2:#0f3460;
+  background: linear-gradient(270deg,var(--bg1),var(--bg2));
+  color: #f0f0f0;
+}
+body.dark .glow{
+  background: linear-gradient(90deg,var(--fg1),var(--fg2));
+  text-shadow:0 0 20px rgba(233,69,96,0.6),0 0 40px rgba(15,52,96,0.6);
+}
+body.dark .card a{color:var(--fg1);}
 
 /* responsive tweaks */
 @media (max-width:600px){.nav-links{display:none}.glow{font-size:clamp(48px,28vw,140px)}.hero{padding-top:4rem}}
