@@ -1,61 +1,102 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Epic Hello — Raudrobot</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raudrobot – New Site</title>
+  <style>
+    :root{
+      --bg: #0f172a;
+      --fg: #06b6d4;
+      --accent: #facc15;
+      --text: #e6e8f0;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html, body{height:100%;font-family:system-ui, sans-serif; background: var(--bg); color: var(--text);}
+    a{color: var(--fg); text-decoration: none;}
+    a:hover{color: var(--accent);}
+
+    body{scroll-behavior: smooth;}
+
+    header{
+      position: fixed; top:0; left:0; right:0;
+      background: rgba(15,23,42,0.85);
+      padding: 1rem 2rem;
+      display:flex; justify-content: space-between; align-items:center;
+      z-index:10;
+    }
+    .nav-links{display:flex; gap:1rem; list-style:none;}
+
+    main.hero{
+      min-height: 80vh;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center;
+      padding:6rem 1rem 2rem;
+    }
+    main.hero h1{font-size:clamp(2rem,8vw,5rem);}
+    main.hero p{margin:1rem 0 2rem;}
+    .btn{
+      display:inline-block; padding:0.7rem 1.5rem; background: var(--fg); color:white;
+      border-radius:12px; margin:0.3rem; text-decoration:none;
+    }
+    .btn.outline{
+      background:transparent; border:1px solid var(--fg); color:var(--fg);
+    }
+
+    section{
+      padding:4rem 1rem;
+      max-width:900px;
+      margin:0 auto;
+    }
+
+    .projects-list{list-style:none; display:flex; flex-direction:column; gap:0.8rem;}
+
+    footer{
+      text-align:center; padding:2rem 1rem; background: rgba(15,23,42,0.85);
+      font-size:0.9rem;
+    }
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <nav class="nav">
-      <div class="brand">Raudrobot</div>
-      <ul class="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      <button id="theme-toggle" class="btn small">Toggle</button>
-    </nav>
+  <header>
+    <div class="brand">Raudrobot</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
   </header>
 
   <main class="hero">
-    <h1 class="glow">Hello</h1>
-    <p class="subtitle">A tiny experimental landing page — interactive, responsive, and shiny.</p>
-    <div class="hero-cta">
+    <h1>Welcome!</h1>
+    <p>Fresh start. Minimal, clean, mobile-ready.</p>
+    <div>
       <a class="btn" href="#projects">See Projects</a>
-      <button class="btn outline" id="play-btn">Play</button>
+      <a class="btn outline" href="#contact">Contact Me</a>
     </div>
   </main>
 
-  <section id="about" class="section">
-    <h2>About This Page</h2>
-    <p>This page is built with semantic HTML, external CSS, and JavaScript. It features animated glowing text, mouse & touch reactive particles, smooth gradient background, and scroll-triggered animations.</p>
+  <section id="about">
+    <h2>About Me</h2>
+    <p>This is a new single-file site, minimal design, fully responsive, ready for your content.</p>
   </section>
 
-  <section id="projects" class="section projects">
+  <section id="projects">
     <h2>Projects</h2>
-    <div id="project-list" class="cards">
-      <article class="card">
-        <h3><a href="https://github.com/Raudrobot/Website" target="_blank">Website (this repo)</a></h3>
-        <p>Repo and live demo for the personal site.</p>
-      </article>
-      <article class="card">
-        <h3>Placeholder Project</h3>
-        <p>Add your project links here.</p>
-      </article>
-    </div>
+    <ul class="projects-list">
+      <li><a href="https://github.com/Raudrobot/Website" target="_blank">Website Repository</a></li>
+      <li><a href="#">Placeholder Project</a></li>
+    </ul>
   </section>
 
-  <section id="contact" class="section">
+  <section id="contact">
     <h2>Contact</h2>
-    <p>Find me on GitHub: <a href="https://github.com/Raudrobot" target="_blank">Raudrobot</a></p>
+    <p>Find me on <a href="https://github.com/Raudrobot" target="_blank">GitHub</a></p>
   </section>
 
-  <footer class="site-footer">Made with ChatGPT 🤖 • © <span id="year">2025</span></footer>
-
-  <canvas id="particle-canvas" aria-hidden="true"></canvas>
-
-  <script src="script.js"></script>
+  <footer>
+    Created by ChatGPT 🤖 • 2025
+  </footer>
 </body>
 </html>
