@@ -112,19 +112,9 @@
     .particle {
       position: absolute;
       border-radius: 50%;
-      background: rgba(255,255,255,0.2);
       pointer-events: none;
-      animation: floatUp linear infinite;
-    }
-
-    @keyframes floatUp {
-      0% { transform: translateY(100vh) scale(0); }
-      100% { transform: translateY(-10vh) scale(1); }
-    }
-
-    /* Dark mode */
-    body.dark {
-      background: black;
+      mix-blend-mode: screen;
+      opacity: 0.7;
     }
   </style>
 </head>
@@ -138,25 +128,67 @@
 
   <div class="section">
     <h2 style="background: linear-gradient(90deg, var(--fg1), var(--fg2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">About This Page</h2>
-    <p>This page is built with HTML, CSS, and a touch of JavaScript. It features animations, glowing text, floating particles, and responsive layout.</p>
+    <p>This page is built with HTML, CSS, and a touch of JavaScript. It now features mouse-reactive particles, glowing text, animations, and responsive design.</p>
   </div>
 
   <footer>Made with ChatGPT 🤖</footer>
 
   <script>
-    // Floating particles
+    // Create floating particles
     const colors = ['#06b6d4','#8b5cf6','#facc15'];
-    for(let i=0;i<30;i++){
-      let p=document.createElement('div');
-      p.className='particle';
-      let size=Math.random()*8+4;
-      p.style.width=size+'px';
-      p.style.height=size+'px';
-      p.style.left=Math.random()*100+'vw';
-      p.style.animationDuration= (Math.random()*10+5)+'s';
-      p.style.background=colors[Math.floor(Math.random()*colors.length)];
-      document.body.appendChild(p);
+    const particles = [];
+    const numParticles = 40;
+    const body = document.body;
+
+    for (let i = 0; i < numParticles; i++) {
+      let p = document.createElement('div');
+      p.className = 'particle';
+      let size = Math.random() * 8 + 4;
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.top = Math.random() * 100 + 'vh';
+      p.style.background = colors[Math.floor(Math.random()*colors.length)];
+      body.appendChild(p);
+      particles.push({el: p, x: Math.random()*window.innerWidth, y: Math.random()*window.innerHeight});
     }
+
+    // Track mouse or touch
+    let mouseX = window.innerWidth/2;
+    let mouseY = window.innerHeight/2;
+
+    window.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    window.addEventListener('touchmove', e => {
+      if (e.touches.length > 0) {
+        mouseX = e.touches[0].clientX;
+        mouseY = e.touches[0].clientY;
+      }
+    });
+
+    // Animate particles
+    function animate() {
+      particles.forEach(p => {
+        // move slightly towards mouse
+        let dx = (mouseX - p.x) * 0.002;
+        let dy = (mouseY - p.y) * 0.002;
+        p.x += dx + (Math.random() - 0.5) * 1.5;
+        p.y += dy + (Math.random() - 0.5) * 1.5;
+
+        // wrap around screen
+        if (p.x < 0) p.x = window.innerWidth;
+        if (p.x > window.innerWidth) p.x = 0;
+        if (p.y < 0) p.y = window.innerHeight;
+        if (p.y > window.innerHeight) p.y = 0;
+
+        p.el.style.transform = `translate(${p.x}px, ${p.y}px)`;
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
   </script>
 </body>
 </html>
