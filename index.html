@@ -48,6 +48,8 @@ header {
 
 .brand { font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; color: var(--accent); }
 
+.menu-toggle { display: none; cursor: pointer; font-size: 1.5rem; color: var(--text-main); user-select: none; }
+
 .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
 .nav-links a { text-decoration: none; color: var(--text-dim); transition: 0.3s; font-size: 0.9rem; font-weight: 500; }
 .nav-links a:hover { color: var(--accent); }
@@ -91,7 +93,19 @@ footer { text-align: center; padding: 4rem; border-top: 1px solid var(--border);
 
 #theme-toggle { background: none; border: 1px solid var(--border); color: var(--text-main); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; }
 
-@media (max-width: 768px) { .nav-links { display: none; } }
+/* Mobile Navigation Styles */
+@media (max-width: 768px) { 
+  .menu-toggle { display: block; }
+  .nav-links { 
+    position: absolute; top: 100%; left: 0; width: 100%;
+    background: var(--card-bg); backdrop-filter: blur(15px);
+    flex-direction: column; padding: 2rem 0; gap: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    transform: translateY(-150%); opacity: 0; pointer-events: none;
+    transition: all 0.4s ease;
+  }
+  .nav-links.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
+}
 </style>
 </head>
 <body>
@@ -100,12 +114,13 @@ footer { text-align: center; padding: 4rem; border-top: 1px solid var(--border);
 
 <header>
   <div class="brand">RAUDROBOT</div>
+  <div class="menu-toggle" id="mobile-menu">☰</div>
   <nav>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#projects">Work</a></li>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#about" class="nav-item">About</a></li>
+      <li><a href="#projects" class="nav-item">Work</a></li>
       <li><button id="theme-toggle">Theme</button></li>
-      <li><a href="#contact" class="btn btn-primary" style="color:white; padding: 0.5rem 1.2rem;">Contact</a></li>
+      <li><a href="#contact" class="btn btn-primary nav-item" style="color:white; padding: 0.5rem 1.2rem;">Contact</a></li>
     </ul>
   </nav>
 </header>
@@ -150,6 +165,8 @@ footer { text-align: center; padding: 4rem; border-top: 1px solid var(--border);
 </footer>
 
 <script>
+// --- UI Interactions ---
+
 // Scroll Animation Observer
 const observer = new IntersectionObserver((entries) => {
 	  entries.forEach(entry => {
@@ -166,16 +183,61 @@ themeBtn.addEventListener('click', () => {
   themeBtn.innerText = document.body.classList.contains('light') ? 'Dark Mode' : 'Light Mode';
 });
 
-// Advanced Particle System (Neural Network Style)
+// Mobile Menu Toggle
+const mobileMenuBtn = document.getElementById('mobile-menu');
+const navLinks = document.getElementById('nav-links');
+const navItems = document.querySelectorAll('.nav-item');
+
+mobileMenuBtn.addEventListener('click', () => {
+	  navLinks.classList.toggle('active');
+  mobileMenuBtn.innerText = navLinks.classList.contains('active') ? '✕' : '☰';
+});
+
+// Close mobile menu when a link is clicked
+navItems.forEach(item => {
+	  item.addEventListener('click', () => {
+	    navLinks.classList.remove('active');
+    mobileMenuBtn.innerText = '☰';
+  });
+});
+
+
+// --- Advanced Particle System (Neural Network Style) ---
+
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
 let w, h, particles = [];
+let mouse = { x: null, y: null, radius: 150 };
+
+// Track mouse position
+window.addEventListener('mousemove', (event) => {
+	  mouse.x = event.x;
+  mouse.y = event.y;
+});
+
+// Clear mouse position when it leaves the window
+window.addEventListener('mouseout', () => {
+	  mouse.x = undefined;
+  mouse.y = undefined;
+});
 
 function init() {
-	  w = canvas.width = window.innerWidth;
-  h = canvas.height = window.innerHeight;
+	  // Retina-ready scaling
+  const dpr = window.devicePixelRatio || 1;
+  w = window.innerWidth;
+  h = window.innerHeight;
+  
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  
+  // Normalize coordinate system to use CSS pixels
+  ctx.scale(dpr, dpr);
+  
+  // Generate particles based on screen size to maintain density
+  const particleCount = (w * h) / 12000;
   particles = [];
-  for(let i=0; i<80; i++) {
+  
+  for(let i = 0; i < particleCount; i++) {
 	    particles.push({
 	      x: Math.random() * w,
       y: Math.random() * h,
@@ -193,20 +255,26 @@ function draw() {
   ctx.strokeStyle = color;
 
   particles.forEach((p, i) => {
-	    p.x += p.vx; p.y += p.vy;
+	    // Movement
+    p.x += p.vx; 
+    p.y += p.vy;
+    
+    // Boundary collision
     if(p.x < 0 || p.x > w) p.vx *= -1;
     if(p.y < 0 || p.y > h) p.vy *= -1;
     
+    // Draw particle
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
     ctx.fill();
 
-    // Line connections
-    for(let j=i+1; j<particles.length; j++) {
+    // Line connections between particles
+    for(let j = i + 1; j < particles.length; j++) {
 	      let p2 = particles[j];
       let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+      
       if(dist < 120) {
-	        ctx.globalAlpha = 1 - (dist/120);
+	        ctx.globalAlpha = 1 - (dist / 120);
         ctx.lineWidth = 0.5;
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
@@ -214,12 +282,34 @@ function draw() {
         ctx.stroke();
       }
     }
+    
+    // Line connections to mouse
+    if (mouse.x != null) {
+	      let mouseDist = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+      if (mouseDist < mouse.radius) {
+	        ctx.globalAlpha = 1 - (mouseDist / mouse.radius);
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(mouse.x, mouse.y);
+        ctx.stroke();
+      }
+    }
+    
     ctx.globalAlpha = 1;
   });
+  
   requestAnimationFrame(draw);
 }
 
-window.addEventListener('resize', init);
+// Debounce resize event to improve performance
+let resizeTimeout;
+window.addEventListener('resize', () => {
+	  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(init, 200);
+});
+
+// Initialize and start animation
 init();
 draw();
 </script>
