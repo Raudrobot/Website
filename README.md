@@ -1,3 +1,3 @@
 # Website
 
-Made with ChatGpt
+Made with Google Gemini

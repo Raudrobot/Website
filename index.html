@@ -3,116 +3,224 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Raudrobot – Interactive Site</title>
+<title>Raudrobot | Future-Proof</title>
 <style>
-:root{
-  --bg1:#0f172a; --bg2:#1e293b;
-  --fg1:#06b6d4; --fg2:#8b5cf6;
-  --text:#e6e8f0;
-  --accent:#facc15;
+:root {
+	  --bg: #030712;
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --border: rgba(255, 255, 255, 0.1);
+  --accent: #06b6d4;
+  --secondary: #8b5cf6;
+  --text-main: #f8fafc;
+  --text-dim: #94a3b8;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;font-family:system-ui, sans-serif; color:var(--text); scroll-behavior:smooth;}
-a{color:var(--fg1); text-decoration:none;}
-a:hover{color:var(--accent);}
-body{background:linear-gradient(270deg,var(--bg1),var(--bg2)); background-size:400% 400%; animation:bgShift 20s ease infinite;}
-header{position:fixed;top:0;left:0;right:0; background:rgba(15,23,42,0.85); padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; z-index:10;}
-.nav-links{display:flex; gap:1rem; list-style:none;}
-.hero{min-height:80vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6rem 1rem 2rem; position:relative; z-index:2;}
-.hero h1{font-size:clamp(2rem,8vw,5rem); background:linear-gradient(90deg,var(--fg1),var(--fg2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:glow 3s ease-in-out infinite;}
-.hero p{margin:1rem 0 2rem;}
-.btn{display:inline-block; padding:0.7rem 1.5rem; background: var(--fg1); color:white; border-radius:12px; margin:0.3rem;}
-.btn.outline{background:transparent; border:1px solid var(--fg1); color:var(--fg1);}
-section{padding:4rem 1rem; max-width:900px; margin:0 auto;}
-.projects-list{list-style:none; display:flex; flex-direction:column; gap:0.8rem;}
-footer{text-align:center; padding:2rem 1rem; background:rgba(15,23,42,0.85); font-size:0.9rem;}
 
-/* Theme toggle */
-body.dark{--bg1:#1a1a2e; --bg2:#162447; --fg1:#e94560; --fg2:#0f3460; background:linear-gradient(270deg,var(--bg1),var(--bg2)); color:#f0f0f0;}
-body.dark .hero h1{background:linear-gradient(90deg,var(--fg1),var(--fg2));}
+body.light {
+	  --bg: #f8fafc;
+  --card-bg: rgba(0, 0, 0, 0.03);
+  --border: rgba(0, 0, 0, 0.1);
+  --accent: #0891b2;
+  --secondary: #7c3aed;
+  --text-main: #0f172a;
+  --text-dim: #475569;
+}
 
-/* Particles canvas */
-#particle-canvas{position:fixed; inset:0; z-index:0; display:block; pointer-events:none;}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { 
+  background-color: var(--bg); 
+  color: var(--text-main); 
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background 0.4s ease;
+}
 
-/* Animations */
-@keyframes bgShift{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
-@keyframes glow{0%,100%{text-shadow:0 0 18px rgba(139,92,246,0.6),0 0 36px rgba(6,182,212,0.5);}50%{text-shadow:0 0 36px rgba(139,92,246,0.9),0 0 72px rgba(6,182,212,0.9);}}
+/* Background Canvas */
+#bg-canvas { position: fixed; inset: 0; z-index: -1; }
+
+header {
+	  position: fixed; top: 0; width: 100%; z-index: 100;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 5%;
+}
+
+.brand { font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; color: var(--accent); }
+
+.nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+.nav-links a { text-decoration: none; color: var(--text-dim); transition: 0.3s; font-size: 0.9rem; font-weight: 500; }
+.nav-links a:hover { color: var(--accent); }
+
+.hero {
+	  height: 100vh; display: flex; flex-direction: column; 
+  justify-content: center; align-items: center; text-align: center;
+  padding: 0 1rem;
+}
+
+.hero h1 {
+	  font-size: clamp(3rem, 10vw, 6rem);
+  line-height: 1; margin-bottom: 1.5rem;
+  background: linear-gradient(to right, var(--accent), var(--secondary));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+.btn {
+	  padding: 0.8rem 2rem; border-radius: 50px; border: none; cursor: pointer;
+  font-weight: 600; transition: 0.3s; text-decoration: none; display: inline-block;
+}
+.btn-primary { background: var(--accent); color: white; box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3); }
+.btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+section { 
+  max-width: 1000px; margin: 0 auto; padding: 8rem 2rem; 
+  opacity: 0; transform: translateY(30px); transition: 1s all ease-out;
+}
+section.visible { opacity: 1; transform: translateY(0); }
+
+.glass-card {
+	  background: var(--card-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  padding: 2.5rem; border-radius: 24px;
+}
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+
+footer { text-align: center; padding: 4rem; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.8rem; }
+
+#theme-toggle { background: none; border: 1px solid var(--border); color: var(--text-main); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; }
+
+@media (max-width: 768px) { .nav-links { display: none; } }
 </style>
 </head>
 <body>
+
+<canvas id="bg-canvas"></canvas>
+
 <header>
-  <div class="brand">Raudrobot</div>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><button id="theme-toggle" class="btn small">Toggle Theme</button></li>
-  </ul>
+  <div class="brand">RAUDROBOT</div>
+  <nav>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Work</a></li>
+      <li><button id="theme-toggle">Theme</button></li>
+      <li><a href="#contact" class="btn btn-primary" style="color:white; padding: 0.5rem 1.2rem;">Contact</a></li>
+    </ul>
+  </nav>
 </header>
 
 <main class="hero">
-  <h1>Welcome!</h1>
-  <p>Fresh start. Minimal, interactive, mobile-ready.</p>
-  <div>
-    <a class="btn" href="#projects">See Projects</a>
-    <a class="btn outline" href="#contact">Contact Me</a>
-  </div>
+  <h1>Code. Craft.<br>Connect.</h1>
+  <p style="color: var(--text-dim); max-width: 500px; margin-bottom: 2rem; font-size: 1.2rem;">
+    Pushing boundaries with elegant code and interactive experiences.
+  </p>
+  <a href="#projects" class="btn btn-primary">View Portfolio</a>
 </main>
 
-<section id="about">
-  <h2>About Me</h2>
-  <p>This is a single-file interactive site. Minimal, responsive, with glowing text, gradient background, and theme toggle.</p>
+<section id="about" class="glass-card">
+  <h2 style="margin-bottom: 1rem; color: var(--accent);">About the Project</h2>
+  <p>Version 2.0 introduces a <strong>high-performance canvas engine</strong> and a modern <strong>Glassmorphism</strong> design system. Built for speed, responsiveness, and a premium feel.</p>
 </section>
 
 <section id="projects">
-  <h2>Projects</h2>
-  <ul class="projects-list">
-    <li><a href="https://github.com/Raudrobot/Website" target="_blank">Website Repository</a></li>
-    <li><a href="#">Placeholder Project</a></li>
-  </ul>
+  <h2 style="margin-bottom: 2rem;">Selected Projects</h2>
+  <div class="grid">
+    <div class="glass-card">
+      <h3>Neural Background</h3>
+      <p style="color: var(--text-dim); margin: 1rem 0;">A custom JS engine rendering connected nodes in real-time.</p>
+      <a href="https://github.com/Raudrobot" style="color: var(--accent);">View Source →</a>
+    </div>
+    <div class="glass-card">
+      <h3>Interface v2</h3>
+      <p style="color: var(--text-dim); margin: 1rem 0;">Responsive mobile-first layout with smooth scroll triggers.</p>
+      <a href="#" style="color: var(--accent);">Live Demo →</a>
+    </div>
+  </div>
 </section>
 
-<section id="contact">
-  <h2>Contact</h2>
-  <p>Find me on <a href="https://github.com/Raudrobot" target="_blank">GitHub</a></p>
+<section id="contact" style="text-align: center;">
+  <h2>Let's build something.</h2>
+  <p style="margin-bottom: 2rem;">Currently available for interesting collaborations.</p>
+  <a href="mailto:hello@raudrobot.com" class="btn btn-primary">Send an Email</a>
 </section>
 
-<canvas id="particle-canvas" aria-hidden="true"></canvas>
-
-<footer>Created by ChatGPT 🤖 • 2025</footer>
+<footer>
+  &copy; 2026 Raudrobot &bull; Built with precision.
+</footer>
 
 <script>
-// Theme toggle
+// Scroll Animation Observer
+const observer = new IntersectionObserver((entries) => {
+	  entries.forEach(entry => {
+	    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+// Theme Toggle
 const themeBtn = document.getElementById('theme-toggle');
-themeBtn.addEventListener('click', () => document.body.classList.toggle('dark'));
+themeBtn.addEventListener('click', () => {
+	  document.body.classList.toggle('light');
+  themeBtn.innerText = document.body.classList.contains('light') ? 'Dark Mode' : 'Light Mode';
+});
 
-// Simple particle background
-const canvas = document.getElementById('particle-canvas');
+// Advanced Particle System (Neural Network Style)
+const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
-let W = window.innerWidth, H = window.innerHeight;
-canvas.width = W; canvas.height = H;
-window.addEventListener('resize',()=>{W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight;});
+let w, h, particles = [];
 
-const particles = [];
-for(let i=0;i<60;i++){
-  particles.push({x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-0.5)*0.5, vy:(Math.random()-0.5)*0.5, r:Math.random()*3+1});
+function init() {
+	  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+  particles = [];
+  for(let i=0; i<80; i++) {
+	    particles.push({
+	      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 2
+    });
+  }
 }
 
-function draw(){
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle='rgba(255,255,255,0.05)';
-  ctx.fillRect(0,0,W,H);
-  ctx.fillStyle='rgba(6,182,212,0.8)';
-  particles.forEach(p=>{
-    p.x+=p.vx; p.y+=p.vy;
-    if(p.x<0)p.x=W; if(p.x>W)p.x=0;
-    if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+function draw() {
+	  ctx.clearRect(0, 0, w, h);
+  const color = getComputedStyle(document.body).getPropertyValue('--accent');
+  ctx.fillStyle = color;
+  ctx.strokeStyle = color;
+
+  particles.forEach((p, i) => {
+	    p.x += p.vx; p.y += p.vy;
+    if(p.x < 0 || p.x > w) p.vx *= -1;
+    if(p.y < 0 || p.y > h) p.vy *= -1;
+    
     ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
     ctx.fill();
+
+    // Line connections
+    for(let j=i+1; j<particles.length; j++) {
+	      let p2 = particles[j];
+      let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+      if(dist < 120) {
+	        ctx.globalAlpha = 1 - (dist/120);
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+      }
+    }
+    ctx.globalAlpha = 1;
   });
   requestAnimationFrame(draw);
 }
+
+window.addEventListener('resize', init);
+init();
 draw();
 </script>
 </body>
