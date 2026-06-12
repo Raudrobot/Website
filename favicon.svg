@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .icon-bg { fill: #2c3e50; }
+      .icon-accent { fill: #3498db; }
+    </style>
+  </defs>
+  <rect class="icon-bg" width="64" height="64" rx="8"/>
+  <circle class="icon-accent" cx="32" cy="20" r="8"/>
+  <rect class="icon-accent" x="24" y="32" width="16" height="20" rx="2"/>
+  <rect class="icon-accent" x="16" y="48" width="8" height="4"/>
+  <rect class="icon-accent" x="40" y="48" width="8" height="4"/>
+</svg>
