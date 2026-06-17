@@ -206,6 +206,54 @@
     }
   }
 
+  // Simple "wrapfabtest" check (vanilla JS) modeled after the jQuery example.
+  // Creates a wrapper with a single .adBar element and checks its height.
+  function simpleAdbarCheck() {
+    try {
+      var wrap = document.getElementById('wrapfabtest');
+      var created = false;
+      if (!wrap) {
+        wrap = document.createElement('div');
+        wrap.id = 'wrapfabtest';
+        var ad = document.createElement('div');
+        ad.className = 'adBar';
+        // Off-screen + tiny so it doesn't affect layout; style includes dimensions so it has height
+        ad.style.cssText = 'background-color:transparent;height:1px;width:1px;position:absolute;left:-9999px;top:-9999px;display:block!important;visibility:visible!important;';
+        wrap.appendChild(ad);
+        try { document.body.appendChild(wrap); } catch (e) {}
+        created = true;
+      }
+
+      window.setTimeout(function () {
+        try {
+          var el = wrap.querySelector('.adBar');
+          var h = 0;
+          if (el) {
+            h = (typeof el.offsetHeight === 'number' ? el.offsetHeight : 0) ||
+                (el.getBoundingClientRect ? Math.round(el.getBoundingClientRect().height) : 0) ||
+                (window.getComputedStyle ? parseInt(getComputedStyle(el).height, 10) || 0 : 0);
+          }
+
+          if (!(h > 0)) {
+            // Detected a blocking/hidden adBar by height
+            try { window.__kao_adblock = true; } catch (e) {}
+            try { ensureCloseButtonOnBanner(); } catch (e) {}
+            try { showAdblockPopup(); } catch (e) {}
+          }
+        } catch (e) {}
+
+        // Cleanup if we created the wrapper
+        try {
+          if (created) {
+            var adEl = wrap.querySelector('.adBar');
+            if (adEl && adEl.parentNode) adEl.parentNode.removeChild(adEl);
+            if (wrap && wrap.parentNode) wrap.parentNode.removeChild(wrap);
+          }
+        } catch (e) {}
+      }, 250);
+    } catch (e) {}
+  }
+
   // Run after DOM ready
   function run() {
     detectAdblock(function (isBlocked) {
@@ -219,6 +267,9 @@
 
       // expose for debugging/testing
       try { window.__kao_adblock = !!isBlocked; } catch (e) {}
+
+      // Run the simple adBar check as an extra heuristic (runs in parallel)
+      try { simpleAdbarCheck(); } catch (e) {}
     });
   }
 
