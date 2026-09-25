@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://raudrobot.com/sitemap.xml
