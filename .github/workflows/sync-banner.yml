@@ -4,7 +4,7 @@ on:
   schedule:
     # Runs on the 1st of every month at 00:00 UTC
     - cron: '0 0 1 * *'
-  workflow_dispatch: # Allows manual trigger from GitHub UI for testing
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -14,34 +14,39 @@ jobs:
   sync-and-pr:
     runs-on: ubuntu-latest
     steps:
+      # Pinned to actions/checkout commit SHA (v4.2.2)
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Fetch remote banner.js
         run: |
           curl -sSL "https://github.com/keepandroidopen/keepandroidopen.github.io/raw/refs/heads/main/public/banner.js" -o banner.js.tmp
 
-      - name: Check for changes
-        id: check_diff
+      - name: Check for changes and create PR natively
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ ! -f banner.js ] || ! cmp -s banner.js banner.js.tmp; then
             mv banner.js.tmp banner.js
-            echo "changed=true" >> $GITHUB_OUTPUT
+            
+            # Configure bot committer identity
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            
+            # Create a new branch and commit changes
+            BRANCH_NAME="update-banner-js-$(date +%Y%m%d)"
+            git checkout -b "$BRANCH_NAME"
+            git add banner.js
+            git commit -m "chore: monthly update for banner.js"
+            git push origin "$BRANCH_NAME"
+            
+            # Create Pull Request using native GitHub CLI
+            gh pr create \
+              --title "chore: monthly update for banner.js" \
+              --body "A new version of banner.js was fetched from upstream. Please inspect before merging." \
+              --base main \
+              --head "$BRANCH_NAME"
           else
             echo "No changes detected."
             rm banner.js.tmp
-            echo "changed=false" >> $GITHUB_OUTPUT
           fi
-
-      - name: Create Pull Request
-        if: steps.check_diff.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: update remote banner.js"
-          title: "chore: monthly update for banner.js"
-          body: |
-            A new version of `banner.js` was detected from the upstream source.
-            Please review the code changes in this PR to ensure no malicious modifications were introduced.
-          branch: update-banner-js
-          delete-branch: true
