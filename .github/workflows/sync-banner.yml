@@ -1,0 +1,47 @@
+name: Sync Banner Script
+
+on:
+  schedule:
+    # Runs on the 1st of every month at 00:00 UTC
+    - cron: '0 0 1 * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI for testing
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync-and-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch remote banner.js
+        run: |
+          curl -sSL "https://github.com/keepandroidopen/keepandroidopen.github.io/raw/refs/heads/main/public/banner.js" -o banner.js.tmp
+
+      - name: Check for changes
+        id: check_diff
+        run: |
+          if [ ! -f banner.js ] || ! cmp -s banner.js banner.js.tmp; then
+            mv banner.js.tmp banner.js
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes detected."
+            rm banner.js.tmp
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.check_diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update remote banner.js"
+          title: "chore: monthly update for banner.js"
+          body: |
+            A new version of `banner.js` was detected from the upstream source.
+            Please review the code changes in this PR to ensure no malicious modifications were introduced.
+          branch: update-banner-js
+          delete-branch: true
